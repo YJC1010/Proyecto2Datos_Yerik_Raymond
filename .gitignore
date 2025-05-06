@@ -1,13 +1,8 @@
 [Ll]ibrary/
 [Tt]emp/
-[Oo]bj/
 [Bb]uild/
 [Bb]uilds/
-[Ll]ogs/
-[Uu]serSettings/
-MemoryCaptures/
-.vs/
-.vscode/
+.obj/
 *.csproj
 *.unityproj
 *.sln
@@ -22,4 +17,9 @@ MemoryCaptures/
 *.mdb
 *.opendb
 *.VC.db
- 
+sysinfo.txt
+
+# Keep these!
+!/[Aa]ssets/**/*.meta
+!/[Pp]rojectSettings/**/*.asset
+
