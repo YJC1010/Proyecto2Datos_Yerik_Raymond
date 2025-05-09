@@ -13,7 +13,7 @@ public class TreeNode
     }
 }
 
-public class BinarySearchTree : MonoBehaviour
+public class BinarySearchTree 
 {
     private TreeNode root;
 

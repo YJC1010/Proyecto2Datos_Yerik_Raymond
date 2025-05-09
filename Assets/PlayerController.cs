@@ -3,13 +3,18 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    public string horizontalInput = "Horizontal";
+    public KeyCode jumpKey = KeyCode.Space;
+
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
     private Rigidbody2D rb;
     private Vector2 movement;
 
-    private float lastJumpTime = -1f;  // Guarda el tiempo del último salto
-    private float jumpCooldown = 1f;   // Tiempo mínimo entre saltos (1 segundo)
+    private float lastJumpTime = -1f;
+    private float jumpCooldown = 1f;
+
+    private BinarySearchTree bst = new BinarySearchTree();
 
     void Start()
     {
@@ -18,12 +23,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Movimiento lateral con WASD
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        movement.x = Input.GetAxisRaw(horizontalInput);
 
-        // Saltar si se presiona espacio y ha pasado 1 segundo desde el último salto
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time - lastJumpTime >= jumpCooldown)
+        if (Input.GetKeyDown(jumpKey) && Time.time - lastJumpTime >= jumpCooldown)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             lastJumpTime = Time.time;
@@ -32,26 +34,22 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Movimiento en el plano
-        rb.MovePosition(rb.position + new Vector2(movement.x, movement.y) * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + new Vector2(movement.x, 0) * moveSpeed * Time.fixedDeltaTime);
     }
-
-
-    public BinarySearchTree bst = new BinarySearchTree();
-
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Token"))
         {
-            int value = other.GetComponent<Token>().value;
-            bst.Insert(value);
-            Debug.Log("Added to BST: " + value);
-            Debug.Log("Current InOrder: " + bst.InOrder());
-            Destroy(other.gameObject);
+            Token token = other.GetComponent<Token>();
+            if (token != null && token.ownerTag == this.tag)
+            {
+                bst.Insert(token.value);
+                Debug.Log(gameObject.name + " added to BST: " + token.value);
+                Debug.Log(gameObject.name + " InOrder: " + bst.InOrder());
+                Destroy(other.gameObject);
+            }
         }
     }
 
-
 }
-
